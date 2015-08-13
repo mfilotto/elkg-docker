@@ -17,6 +17,13 @@ graylog:
         - /graylog/data:/var/opt/graylog/data
         - /graylog/logs:/var/log/graylog 
         net: "host"
+logstash:
+        image: logstash
+        env_file: configurations.env
+        volumes:
+        - ./logstash:/config-dir 
+        net: "host"
+        command: logstash -f /config-dir/logstash.conf 
 kibana:
         image: kibana
         ports: 

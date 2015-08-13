@@ -1,4 +1,5 @@
 FROM elasticsearch:latest
+MAINTAINER Anthony Gourraud <anthony.gourraud@lyra-network.com> 
 
 RUN mkdir /configs
 ADD conf.sh /configs/conf.sh
