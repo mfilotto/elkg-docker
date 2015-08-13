@@ -1,0 +1,25 @@
+elasticsearch:
+        build: ./elasticsearch
+        ports:
+        - "9300:9300"
+        - "9200:9200"
+        env_file: configurations.env
+        volumes: 
+        - /data/elasticsearch:/usr/share/elasticsearch/data
+        net: "host"
+graylog:
+        build: ./graylog
+        ports: 
+        - "9000:9000"
+        - "12201:12201/udp"
+        env_file: configurations.env
+        volumes:
+        - /graylog/data:/var/opt/graylog/data
+        - /graylog/logs:/var/log/graylog 
+        net: "host"
+kibana:
+        image: kibana
+        ports: 
+        - "5601:5601"
+        env_file: configurations.env         
+        net: "host"
