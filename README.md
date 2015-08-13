@@ -1,8 +1,8 @@
-# Analyse des logs : Mise en place d'une pile "ELKG" 
-Environnement de test Docker avec Docker-compose 
+# Logs analysis : "ELKG" setup 
+Setup with Docker-compose 
 
 #
-## Arborescence valide
+## Valid tree
 ```bash
 $ tree 
 .
@@ -20,47 +20,47 @@ $ tree
 └── README.md
 ```
 
-## Lancement et utilisation 
+## Usage 
 
-### Prérequis 
-Assurez-vous d'avoir installé [Docker](https://docs.docker.com/linux/started/) et [Docker-compose](https://docs.docker.com/compose/install/)
+### Prerequisite
+Make sure you have installed [Docker](https://docs.docker.com/linux/started/) and [Docker-compose](https://docs.docker.com/compose/install/)
 
-### Initialisation 
+### Initialization 
 ```bash
-$ cd <repertoire_docker_compose_yml> 
+$ cd <docker_compose_yml_repo>
 $ docker-compose up 
  ```
 
-### Arrêt/Lancement des containers Elasticsearch, Logstash, Kibana & Graylog
-* Il est possible (après avoir exécuté une fois `docker-compose up`) d'arrêter les containers :  
+### Stop/Start Elasticsearch, Logstash, Kibana & Graylog containers
+* Once you have executed `docker-compose up`, you can stop all the containers :  
 ```bash
-$ cd <repertoire_docker_compose_yml> 
+$ cd <docker_compose_yml_repo> 
 $ docker-compose stop 
 ```
-* Pour les relancer, il suffit de faire : 
+* To start the containers, execute this command : 
 ```bash
-$ cd <repertoire_docker_compose_yml> 
+$ cd <docker_compose_yml_repo> 
 $ docker-compose start 
 ```
-* Pour stopper puis relancer, il suffit de faire : 
+* A faster way is to use the `docker-compose restart` command : 
 ```bash
-$ cd <repertoire_docker_compose_yml> 
+$ cd <docker_compose_yml_repo>
 $ docker-compose restart 
 ```
 
-### Utilisation des services 
+### Services available
 * Elasticsearch : http://<ip_docker_host>:9200/_plugin/head
 * Graylog : http://<ip_docker_host>
 * Kibana : http://<ip_docker_host>:5601
 
-## Configurations 
+## Configuration
 
-### Modification du fichier `docker-compose.yml` 
-* Changement de redirection de ports : ne changer que la partie gauche des paramètres "ports:" 
-  `"<port_hote_pouvant_etre_changé>:9300"` par exemple
-* Changement de dossier de persistance : ne changer que la partie gauche des paramètres "volumes:" 
-  `"<chemin_volume_hote_pouvant_etre_changé>:/var/graylog"` par exemple
-* Changement du mode réseau, à choisir entre : 
+### File: `docker-compose.yml` 
+* Ports: you can change the left part of the parameters "ports:"  
+  `"<host_port_which_can_be_changed>:9300"` for example
+* Volumes: you can change the left part of the parameters "volumes:" 
+  `"<host_path_persistant_volume_which_can_be_changed>:/var/graylog"` for example
+* For network modes, you can choose between :
 ```
 net: "bridge"
 net: "none"
@@ -68,56 +68,60 @@ net: "container:[name or id]"
 net: "host"
 ```
 
-### Modification du fichier `configurations.env` 
+### File: `configurations.env` 
 Modifier les variables de configurations de Graylog, Elasticsearch et Kibana en changeant les valeurs adéquates dans `configurations.env` 
 
-### Quid de Logstash 
+### Logstash 
 
-#### Modification du fichier `logstash.conf` 
-Le dossier `logstash` est lié à un volume persistant du container Logstash. Le fichier de configuration `logstash.conf` peut être modifié à souhait.  
-Assurez-vous que le fichier est bien de la forme : 
+#### File: `logstash/logstash.conf` 
+The `logstash` folder is linked with the Logstash container. The configuration file `logstash.conf` can be modified as much as you want.  
+The configuration file must look like this : 
 ```
 input { 
- ## inputs désirés   
+ ## your inputs here   
 }
 filter {
- ## filtres quelconques 
+ ## any filters 
 }
 output {  
- gelf { host => "adr.ip.graylog.accessible" }
+ gelf { host => "ip.adr.graylog.available" }
  stdout { codec => rubydebug }
- ## autres sorties 
+ ## other outputs 
 }
 ```
+You can control Logstash processes if you have access to the `bash` on the Logstash container. To do so, use the command `docker exec <cont_id> bash` (`docker ps` to get the `<cont_id>`).
+Modify `logstash/logstash.conf` on the host machine and restart remotely the Logstash process with : 
+ `logstash -f /config-dir/logstash.conf`. 
 
-Pour avoir un meilleur contrôle du processus Logstash, accédez au bash du container Logstash avec `docker exec <cont_id> bash` (`<cont_id>` est l'id du container, vous pouvez l'obtenir avec la commande `docker ps`). Modifiez le fichier de configuration de Logstash `logstash/logstash.conf` sur la machine hôte comme bon vous semble et relancez à distance le processus de parsing avec la commande `logstash -f /config-dir/logstash.conf`. 
-
-Exemple : 
+Example : 
 ```bash 
-dev29-user@dev29-machine:~$ nano logstash/logstash.conf          #### Modifications du fichier 
-dev29-user@dev29-machine:~$ docker exec -it 3203ed92914d  bash   #### Execution d'un bash sur le container 
-      ### On est sur le container et on prend la main sur le processus Logstash
+dev29-user@dev29-machine:~$ nano logstash/logstash.conf          #### Modifications  
+dev29-user@dev29-machine:~$ docker exec -it 3203ed92914d  bash   #### Execute a bash on the container 
+      ### We are now on the container and we can handle the Logstash process
 root@dev29-machine:/$ logstash -f /config-dir/logstash.conf      
 ```
 
-#### Cas avec des processus Logstash externes 
+#### External Logstash processes 
 
-Le fichier de configuration de Logstash est amené à être souvent modifié. De plus, il est possible que Logstash soit installé sur plusieurs machines. Il est donc intéressant d'avoir Logstash sur d'autres machines. 
+You can install Logstash on different machines to complete the "ELKG stack".
 
-##### Installations avec Docker ([plus d'informations ici](https://hub.docker.com/_/logstash/))
+##### Installation with Docker ([more information here](https://hub.docker.com/_/logstash/))
 
 ```bash 
-docker run -it --rm logstash logstash -e 'input { stdin { } } output { gelf { host => "adr.ip.graylog.accessible" } } 
+docker run -it --rm logstash logstash -e 'input { heartbeat { } } output { gelf { host => "ip.adr.graylog.here" } } 
 ```
-ou 
+or 
 ```bash 
 docker run -it --rm -v "$PWD":/config-dir logstash logstash -f /config-dir/logstash.conf 
-# (`logstash.conf` dans le dossier courant)
+# (`logstash.conf` file has to be in the current folder)
 ```  
 
-##### Installation classique 
-Plus d'informations [ici](https://www.elastic.co/downloads/logstash) 
+##### Classic installation 
+More information [here](https://www.elastic.co/downloads/logstash) 
 
-## Informations
-Toutes modifications/suggestions sont les bienvenues ! 
-Auteur : Anthony GOURRAUD
+## Credits
+Logs Analysis for Lyra Network. You are allowed to use and modify as you see fit.
+Plus, feel free to suggest any ideas. 
+
+Anthony GOURRAUD
+
