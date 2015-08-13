@@ -69,7 +69,8 @@ net: "host"
 ```
 
 ### Modification du fichier `configurations.env` 
-Modifier les variables de configurations de Graylog, Elasticsearch et Kibana en changeant les valeurs adéquates dans `configurations.env` 
+Modifiez les variables de configurations de Graylog, Elasticsearch et Kibana en changeant les valeurs adéquates dans `configurations.env`.
+Veuillez à bien enlever le "#" si vous configurez le mail pour Graylog. Attention à bien indiquer une adresse ip publique pour le paramètre "web-url" (mais vous pouvez donner la valeur `localhost` ou autre IP privée si vous n'avez qu'un usage local...). 
 
 ### Quid de Logstash 
 
@@ -120,4 +121,5 @@ Plus d'informations [ici](https://www.elastic.co/downloads/logstash)
 
 ## Informations
 Toutes modifications/suggestions sont les bienvenues ! 
-Auteur : Anthony GOURRAUD
+
+Anthony GOURRAUD
