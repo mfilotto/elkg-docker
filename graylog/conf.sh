@@ -18,6 +18,7 @@ echo "ES_MULTICAST_ENABLED=${ES_MULTICAST_ENABLED}"
 
 graylog2_conf='/opt/graylog/embedded/cookbooks/graylog/templates/default/graylog.conf.erb'
 sed -i -e "s/#elasticsearch_cluster_name = graylog2/elasticsearch_cluster_name = ${ES_CLUSTER_NAME}/" "$graylog2_conf"
+sed -i -e "s/#elasticsearch_node_name = graylog-server/elasticsearch_node_name = ${ES_NODE_NAME}/" "$graylog2_conf"
 sed -i -e "s/#elasticsearch_discovery_zen_ping_multicast_enabled = false/elasticsearch_discovery_zen_ping_multicast_enabled=${ES_MULTICAST_ENABLED}/" "$graylog2_conf"
 sed -i -e "s/elasticsearch_discovery_zen_ping_unicast_hosts = <%= @es_nodes %>/elasticsearch_discovery_zen_ping_unicast_hosts = ${ES_CLUSTER_UNICAST_HOSTS}/" "$graylog2_conf"
 

@@ -49,9 +49,9 @@ $ docker-compose restart
 ```
 
 ### Services available
-* Elasticsearch : http://ip.docker.host:9200/_plugin/head
-* Graylog : http://ip.docker.host
-* Kibana : http://ip.docker.host:5601
+* Elasticsearch : http://[ip.docker.host]:9200/_plugin/head
+* Graylog : http://[ip.docker.host]
+* Kibana : http://[ip.docker.host]:5601
 
 ## Configuration
 

@@ -49,9 +49,9 @@ $ docker-compose restart
 ```
 
 ### Utilisation des services 
-* Elasticsearch : http://ip.docker.host:9200/_plugin/head
-* Graylog : http://ip.docker.host
-* Kibana : http://ip.docker.host:5601
+* Elasticsearch : http://[ip.docker.host]:9200/_plugin/head
+* Graylog : http://[ip.docker.host]
+* Kibana : http://[ip.docker.host]:5601
 
 ## Configurations 
 
@@ -76,7 +76,7 @@ Veuillez à bien enlever le "#" si vous configurez le mail pour Graylog. Attenti
 
 #### Modification du fichier `logstash.conf` 
 Le dossier `logstash` est lié à un volume persistant du container Logstash. Le fichier de configuration `logstash.conf` peut être modifié à souhait.  
-Assurez-vous que le fichier est bien de la forme : 
+Le fichier `logstash.conf`de la forme : 
 ```
 input { 
  ## inputs désirés   
