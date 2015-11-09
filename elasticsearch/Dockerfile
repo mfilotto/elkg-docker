@@ -1,4 +1,4 @@
-FROM elasticsearch:latest
+FROM elasticsearch:1.7
 MAINTAINER Anthony Gourraud <anthony.gourraud@lyra-network.com> 
 
 RUN mkdir /configs
